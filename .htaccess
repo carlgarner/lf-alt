@@ -1,0 +1,17 @@
+AuthName "Anoto Live tablet"
+AuthType Basic
+AuthMySQLHost localhost
+AuthMySQLDB dppregistry
+AuthMySQLUserTable user
+AuthMySQLEnable On
+require valid-user
+
+AuthMySQLUser registry
+AuthMySQLPassword Dk8iwKE_w41
+AuthMySQLNameField username
+AuthMySQLPasswordField password
+AuthMySQLNoPasswd Off
+AuthMySQLPwEncryption crypt
+AuthMySQLGroupTable usergrouprelation
+AuthMySQLGroupField usergroup
+AuthMySQLUserCondition "user.enabled = 'true'"
