@@ -1,3 +1,8 @@
+RewriteEngine on
+RewriteBase /alt/
+RewriteCond $1 !^(index\.php)
+RewriteRule ^(.*)$ index.php/$1 [L]
+
 AuthName "Anoto Live tablet"
 AuthType Basic
 AuthMySQLHost localhost
