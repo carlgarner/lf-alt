@@ -5,9 +5,10 @@
 #print_r(explode('/', ltrim($_SERVER['PATH_INFO'], '/')));
 #exit();
 
+ini_set('display_errors', 'off');
+
 header('Content-type: text/xml');
 
-require_once '/opt/dpp-registry/src/entities/classes.php';
 require_once 'helpers/applications.php';
 
 $user	= null;
@@ -29,14 +30,15 @@ if(!in_array($_SERVER['HTTP_HOST'], $whitelist))
 	}
 }
 
-$user = UserRepository::getUserHavingName($_SERVER['PHP_AUTH_USER']);
-
 $path = explode('/', ltrim($_SERVER['PATH_INFO'], '/'));
 
 switch($path[0])
 {
 	case 'applist':
 		getAppList($xml, $_SERVER['PHP_AUTH_USER']);
+		break;
+	case 'fetchapp':
+		getDefinition($xml, $path[1]);
 		break;
 	default:
 		$xml->addChild('error', 'No recognised action set');
