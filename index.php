@@ -1,11 +1,17 @@
 <?php
 
+define('APPs', '/opt/dpp-appserver/src');
+define('REGs', '/opt/dpp-registry/src');
+
+$regsrv = false;
+$appsrv = false;
+
 ini_set('display_errors', 'off');
 
 header('Content-type: text/xml');
 
 require_once 'helpers/appserver.php';
-require_once 'helpers/registry.php';
+require_once 'helpers/regserver.php';
 
 $user	= null;
 $xml	= simplexml_load_string('<tablet></tablet>');
@@ -31,10 +37,12 @@ $path = explode('/', ltrim($_SERVER['PATH_INFO'], '/'));
 switch($path[0])
 {
 	case 'applist':
-		getAppList($xml, $_SERVER['PHP_AUTH_USER']);
+		$reg = new RegServer();
+		$reg->getAppList($xml, $_SERVER['PHP_AUTH_USER']);
 		break;
 	case 'fetchapp':
-		getDefinition($xml, $path[1]);
+		$app = new AppServer();
+		$app->getDefinition($xml, $path[1]);
 		break;
 	default:
 		$xml->addChild('error', 'No recognised action set');
@@ -44,28 +52,44 @@ echo $xml->asXML();
 
 function __autoload($class)
 {
-	define('APP', '/opt/dpp-appserver/src/');
-	define('REG', '/opt/dpp-registry/src/');
-	
-	$dirs = array(	APP,
-					APP . 'actions',
-					APP . 'rules',
-					APP . 'api',
-					APP . 'api/renderers',
-					APP . 'api/delivery',
-					APP . 'events',
-					APP . 'exceptions',
-					REG,
-					REG . 'entities',
-				);
-				
-	foreach($dirs as $dir)
+	global $regsrv, $appsrv;
+
+	$appdirs = array(	APPs,
+						APPs . '/actions',
+						APPs . '/rules',
+						APPs . '/api',
+						APPs . '/api/renderers',
+						APPs . '/api/delivery',
+						APPs . '/events',
+						APPs . '/exceptions',
+					);
+	$regdirs = array(	REGs,
+						REGs . '/entities',
+					);
+
+	if($regsrv)
 	{
-		$file = $dir . '/' . $class . '.php';
-		
-		if(file_exists($file))
+		foreach($regdirs as $reg)
 		{
-			require_once $file;
+			$file = $reg . '/' . $class . '.php';
+
+			if(file_exists($file))
+			{
+				require_once $file;
+			}
+		}
+	}
+
+	if($appsrv)
+	{
+		foreach($appdirs as $app)
+		{
+			$file = $app . '/' . $class . '.php';
+
+			if(file_exists($file))
+			{
+				require_once $file;
+			}
 		}
 	}
 }
