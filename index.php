@@ -1,14 +1,12 @@
 <?php
 
+ini_set('display_errors', 'off');
+
 define('APPs', '/opt/dpp-appserver/src');
 define('REGs', '/opt/dpp-registry/src');
 
 $regsrv = false;
 $appsrv = false;
-
-ini_set('display_errors', 'off');
-
-header('Content-type: text/xml');
 
 require_once 'helpers/appserver.php';
 require_once 'helpers/regserver.php';
@@ -22,12 +20,16 @@ if(!in_array($_SERVER['HTTP_HOST'], $whitelist))
 	if(!isset($_SERVER['HTTPS']) || strcasecmp($_SERVER['HTTPS'], 'on') != 0)
 	{
 		$xml->addChild('error', 'You must use SSL encryption to access this site');
+		
+		header('Content-type: text/xml');
 		exit($xml->asXML());
 	}
 
 	if(!isset($_SERVER['PHP_AUTH_USER']))
 	{
 		$xml->addChild('error', 'You must be authenticated to access this site');
+		
+		header('Content-type: text/xml');
 		exit($xml->asXML());
 	}
 }
@@ -48,6 +50,7 @@ switch($path[0])
 		$xml->addChild('error', 'No recognised action set');
 }
 
+header('Content-type: text/xml');
 echo $xml->asXML();
 
 function __autoload($class)
