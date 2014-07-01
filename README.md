@@ -6,13 +6,13 @@ the case until all customers can be suitably migrated to the ALF platform.
 
 Things that the API needs to do
 
-1. Login/Authentication
+1. Login/Authentication - **COMPLETE**
   * Basic HTTP authentication, already provided and not managed by API
 
-2. List of form templates/models - completed
+2. List of form templates/models - **COMPLETE**
   * Name, Description, ID, Created Date, Modified Date
 
-3. Download of form template with background image - completed
+3. Download of form template with background image - **COMPLETE**
   * Config XML and background PNG's (base 64 encoded files - PNG's are cached for speed)
 
 4. List of submissions by form
