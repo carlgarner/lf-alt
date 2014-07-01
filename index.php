@@ -10,8 +10,10 @@ $appsrv = false;
 
 require_once 'helpers/appserver.php';
 require_once 'helpers/regserver.php';
+require_once 'helpers/URL.php';
 
 $user	= null;
+$URL	= new URL();
 $xml	= simplexml_load_string('<tablet></tablet>');
 
 $whitelist = array('localhost', '127.0.0.1', '::1');
@@ -34,7 +36,7 @@ if(!in_array($_SERVER['HTTP_HOST'], $whitelist))
 	}
 }
 
-$path = explode('/', ltrim($_SERVER['PATH_INFO'], '/'));
+$path = $URL->uri_to_assoc(2);
 
 switch($path[0])
 {
@@ -46,6 +48,9 @@ switch($path[0])
 		$app = new AppServer();
 		$app->getDefinition($xml, $path[1]);
 		break;
+	case 'formlist':
+		$app = new AppServer();
+		$app->getFormList($xml, $_SERVER['PHP_AUTH_USER']);
 	default:
 		$xml->addChild('error', 'No recognised action set');
 }
