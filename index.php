@@ -36,9 +36,10 @@ if(!in_array($_SERVER['HTTP_HOST'], $whitelist))
 	}
 }
 
-$path = $URL->uri_to_assoc(2);
+//all URLs should begin at /route
+$path = $URL->uri_to_assoc(1);
 
-switch($path[0])
+switch($path['route'])
 {
 	case 'applist':
 		$reg = new RegServer();
@@ -46,11 +47,11 @@ switch($path[0])
 		break;
 	case 'fetchapp':
 		$app = new AppServer();
-		$app->getDefinition($xml, $path[1]);
+		$app->getDefinition($xml, $path);
 		break;
 	case 'formlist':
 		$app = new AppServer();
-		$app->getFormList($xml, $_SERVER['PHP_AUTH_USER']);
+		$app->getFormList($xml, $path, $_SERVER['PHP_AUTH_USER']);
 	default:
 		$xml->addChild('error', 'No recognised action set');
 }
