@@ -2,11 +2,20 @@
 
 class Appserver
 {
-	public function getDefinition($xml, $app = false)
+	public function getDefinition($xml, $path)
 	{
-		if(!$app)
+		if(!isset($path['id']))
 		{
-			$xml->addChild('error', 'Application ID not given');
+			$xml->addChild('error', 'ID not given');
+			return;
+		}
+
+		$app = null;
+		$app = intval($path['id']);
+
+		if(!is_int($app))
+		{
+			$xml->addChild('error', 'ID value is not a number');
 			return;
 		}
 
@@ -15,8 +24,16 @@ class Appserver
 
 		if(!is_file($baseconfig))
 		{
-			$ai = new ApplicationInstaller();
-			$ai->downloadApp($app, 0);	
+			try
+			{
+				$ai = new ApplicationInstaller();
+				$ai->downloadApp($app, 0);
+			}
+			catch(Exception $e)
+			{
+				$xml->addChild('error', $e->getMessage());
+				return;
+			}
 		}
 
 		if(!is_file($basepdf))
