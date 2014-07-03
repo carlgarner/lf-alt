@@ -2,6 +2,9 @@
 
 ini_set('display_errors', 'off');
 
+$appsrv = false;
+$regsrv = false;
+
 define('APPs', '/opt/dpp-appserver/src');
 define('REGs', '/opt/dpp-registry/src');
 

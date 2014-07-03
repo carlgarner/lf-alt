@@ -177,13 +177,22 @@ class Autoload {
 	 * @throws  Exception
 	 */
 	static private function _load($class) {
+		global $regsrv, $appsrv;
+
 		// Replace double backslash with a forward slash. Mostly for future use
 		$name = str_replace(array('\\'), '/', $class);
 
 		// Run through known directories for the class
 		foreach (self::$directories as $directory) {
 			if (file_exists($path = $directory.$name.self::$_ext)) {
-				return require $path;
+				if($appsrv && strpos($directory, 'dpp-registry') === false) {
+					error_log('Appserver loading => ' . $path);
+					return require_once $path;
+				}
+				if($regsrv && strpos($directory, 'dpp-appserver') === false) {
+					error_log('Registry loading => ' . $path);
+					return require_once $path;
+				}
 			}
 		}
 

@@ -8,6 +8,9 @@ class RegServer
 
 	public function getAppList()
 	{
+		global $regsrv;
+		$regsrv = true;
+
 		$user = UserRepository::getUserHavingName($this->user);
 		$orgs = $user->getOrganizationMemberships();
 		$apps = ApplicationRepository::getApplicationsForOrganizations($orgs);

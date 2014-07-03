@@ -8,18 +8,23 @@ class Appserver
 	
 	public function getFormList()
 	{
+		global $appsrv;
+		$appsrv = true;
 	}
 	
 	public function getDefinition()
 	{
-		if(!isset($path['id']))
+		global $appsrv;
+		$appsrv = true;
+
+		if(!isset($this->path['id']))
 		{
 			$this->xml->addChild('error', 'ID not given');
 			return;
 		}
 
 		$app = null;
-		$app = intval($path['id']);
+		$app = intval($this->path['id']);
 
 		if(!is_int($app))
 		{
