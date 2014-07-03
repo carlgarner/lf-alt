@@ -2,11 +2,19 @@
 
 class Appserver
 {
-	public function getDefinition($xml, $path)
+	private $user;
+	private $path;
+	private $xml;
+	
+	public function getFormList()
+	{
+	}
+	
+	public function getDefinition()
 	{
 		if(!isset($path['id']))
 		{
-			$xml->addChild('error', 'ID not given');
+			$this->xml->addChild('error', 'ID not given');
 			return;
 		}
 
@@ -15,7 +23,7 @@ class Appserver
 
 		if(!is_int($app))
 		{
-			$xml->addChild('error', 'ID value is not a number');
+			$this->xml->addChild('error', 'ID value is not a number');
 			return;
 		}
 
@@ -31,7 +39,7 @@ class Appserver
 			}
 			catch(Exception $e)
 			{
-				$xml->addChild('error', $e->getMessage());
+				$this->xml->addChild('error', $e->getMessage());
 				return;
 			}
 		}
@@ -54,7 +62,7 @@ class Appserver
 
 		$appconfig = chunk_split(base64_encode(file_get_contents($baseconfig)), 80, "\n");
 
-		$a = $xml->addChild('application');
+		$a = $this->xml->addChild('application');
 		$a->addChild('config', $appconfig);
 
 		$cache 	= str_replace('helpers', 'cache', dirname(__FILE__));
@@ -76,10 +84,10 @@ class Appserver
 		}
 	}
 
-	public function __construct()
+	public function __construct($user, $path, $xml)
 	{
-		global $appsrv;
-
-		$appsrv = true;
+		$this->user = $user;
+		$this->path = $path;
+		$this->xml	= $xml;
 	}
 }

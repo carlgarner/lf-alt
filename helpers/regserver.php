@@ -2,9 +2,13 @@
 
 class RegServer
 {
-	public function getAppList($xml, $username)
+	private $user;
+	private $path;
+	private $xml;
+
+	public function getAppList()
 	{
-		$user = UserRepository::getUserHavingName($username);
+		$user = UserRepository::getUserHavingName($this->user);
 		$orgs = $user->getOrganizationMemberships();
 		$apps = ApplicationRepository::getApplicationsForOrganizations($orgs);
 
@@ -16,7 +20,7 @@ class RegServer
 
 			$apps = ApplicationRepository::getApplicationsForOrganizations(array($org->id));
 
-			$o = $xml->addChild('organisation');
+			$o = $this->xml->addChild('organisation');
 			$o->addAttribute('id', $org->id);
 			$o->addAttribute('name', $org->name);
 
@@ -37,10 +41,10 @@ class RegServer
 		}
 	}
 
-	public function __construct()
+	public function __construct($user, $path, $xml)
 	{
-		global $regsrv;
-
-		$regsrv = true;
+		$this->user = $user;
+		$this->path = $path;
+		$this->xml	= $xml;
 	}
 }

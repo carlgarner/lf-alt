@@ -5,12 +5,10 @@ ini_set('display_errors', 'off');
 define('APPs', '/opt/dpp-appserver/src');
 define('REGs', '/opt/dpp-registry/src');
 
-$regsrv = false;
-$appsrv = false;
-
 require_once 'helpers/autoload.php';
 require_once 'helpers/appserver.php';
 require_once 'helpers/regserver.php';
+require_once 'helpers/docserver.php';
 require_once 'helpers/URL.php';
 
 Autoload::register();
@@ -53,19 +51,30 @@ if(!in_array($_SERVER['HTTP_HOST'], $whitelist))
 //all URLs should begin at /route
 $path = $URL->uri_to_assoc(1);
 
-$reg = new RegServer();
-$app = new Appserver();
+$reg = new RegServer($_SERVER['PHP_AUTH_USER'], $path, $xml);
+$app = new Appserver($_SERVER['PHP_AUTH_USER'], $path, $xml);
+$doc = new DocServer($_SERVER['PHP_AUTH_USER'], $path, $xml);
 
 switch($path['route'])
 {
 	case 'applist':
-		$reg->getAppList($xml, $_SERVER['PHP_AUTH_USER']);
+		$reg->getAppList();
 		break;
 	case 'fetchapp':
-		$app->getDefinition($xml, $path);
+		$app->getDefinition();
 		break;
 	case 'formlist':
-		$app->getFormList($xml, $path, $_SERVER['PHP_AUTH_USER']);
+		$app->getFormList();
+		break;
+	case 'startdoc':
+		$doc->startDoc();
+		break;
+	case 'getdoc':
+		$doc->getDoc();
+		break;
+	case 'updatedoc':
+		$doc->updateDoc();
+		break;
 	default:
 		$xml->addChild('error', 'No recognised action set');
 }
