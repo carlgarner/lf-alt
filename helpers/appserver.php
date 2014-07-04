@@ -17,18 +17,18 @@ class Appserver
 		global $appsrv;
 		$appsrv = true;
 
-		if(!isset($this->path['id']))
+		if(!isset($this->path['appid']))
 		{
-			$this->xml->addChild('error', 'ID not given');
+			$this->xml->addChild('error', 'App ID not given');
 			return;
 		}
 
 		$app = null;
-		$app = intval($this->path['id']);
+		$app = intval($this->path['appid']);
 
 		if(!is_int($app))
 		{
-			$this->xml->addChild('error', 'ID value is not a number');
+			$this->xml->addChild('error', 'App ID value is not a number');
 			return;
 		}
 
