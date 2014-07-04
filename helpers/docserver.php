@@ -17,7 +17,7 @@ class DocServer
 			return;
 		}
 
-		$app 	= null
+		$app 	= null;
 		$appid	= null;
 		$appid	= intval($this->path['appid']);
 

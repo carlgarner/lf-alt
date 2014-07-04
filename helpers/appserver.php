@@ -10,16 +10,29 @@ class Appserver
 	{
 		global $appsrv;
 		$appsrv = true;
+		$limit	= '';
+
+		if(isset($this->path['appid']))
+		{
+			$app = intval($this->path['appid']);
+
+			if($app == $this->path['appid'])
+			{
+				$limit = 'AND Doc.app_id = ' . $app;
+			}
+		}
 		
 		$dbFactory = new DBFactory();
 		$db = $dbFactory->createDB();
 		
-		$query = 'SELECT Doc.id, Doc.name, Doc.status, Doc.app_id, MAX(Changeset.created_date) as modified_date
+		$query = 'SELECT Doc.id, Doc.name, Doc.status, Doc.app_id, MAX(Changeset.created_date) as modified_date, Doc.base_address
 					FROM Doc
 						LEFT JOIN Changeset ON Doc.id = Changeset.doc_id
 							WHERE submitter_email = "' . $this->user . '"
-								GROUP BY Doc.id
-								ORDER BY Changeset.created_date DESC';
+								' . (($limit) ? $limit : '') . '
+								AND Doc.base_address = "0.0.0.1"
+									GROUP BY Doc.id
+									ORDER BY Changeset.created_date DESC';
 		$db->query($query);
 
 		while($row = $db->fetchRow()) 
@@ -28,6 +41,7 @@ class Appserver
 			$doc->addChild('id', $row['id']);
 			$doc->addChild('appid', $row['app_id']);
 			$doc->addChild('name', $row['name']);
+			$doc->addChild('address', $row['base_address']);
 			$doc->addChild('last_modified', gmdate('Y-m-d H:i:s', strtotime($row['modified_date'])));
 		}
 	}
