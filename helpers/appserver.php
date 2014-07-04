@@ -10,6 +10,26 @@ class Appserver
 	{
 		global $appsrv;
 		$appsrv = true;
+		
+		$dbFactory = new DBFactory();
+		$db = $dbFactory->createDB();
+		
+		$query = 'SELECT Doc.id, Doc.name, Doc.status, Doc.app_id, MAX(Changeset.created_date) as modified_date
+					FROM Doc
+						LEFT JOIN Changeset ON Doc.id = Changeset.doc_id
+							WHERE submitter_email = "' . $this->user . '"
+								GROUP BY Doc.id
+								ORDER BY Changeset.created_date DESC';
+		$db->query($query);
+
+		while($row = $db->fetchRow()) 
+		{
+			$doc = $this->xml->addChild('doc');
+			$doc->addChild('id', $row['id']);
+			$doc->addChild('appid', $row['app_id']);
+			$doc->addChild('name', $row['name']);
+			$doc->addChild('last_modified', gmdate('Y-m-d H:i:s', strtotime($row['modified_date'])));
+		}
 	}
 	
 	public function getDefinition()
