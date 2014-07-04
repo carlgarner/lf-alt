@@ -101,13 +101,16 @@ URL endpoint: https://servername/alt/route/formlist/appid/<appId> - where <appId
 
 The "appid" pair in the URL is optional. Without it, all documents accessible by the user will be returned. With it, only documents for the specified application will be returned; useful for filtering.
 
-**Errors**
-This call could return one of the following errors. Only one error will appear at a time.
-
 ```xml
 <?xml version="1.0"?>
 <tablet>
-	<error>No such application in registry ('appId')</error> <!-- The application does not exist, it may have been deleted -->
+	<doc> <!-- Repeating block -->
+		<id>1234</id> <!-- Document ID -->
+		<appid>1</appid> <!-- Application ID -->
+		<name>DocumentName</name> <!-- Doc Name, could be same as app name, modified by custom handler or set on tablet -->
+		<address>0.0.0.1</address> <!-- Will always be 0.0.0.1 for tablet forms. No other forms will be sent back at present -->
+		<last_modified>yyy-mm-dd hh:mm:ss</last_modified> <!-- The timestamp from the last changeset/submission -->
+	</doc>
 </tablet>
 ```
 
