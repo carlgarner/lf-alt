@@ -98,17 +98,11 @@ This call could return one of the following errors. Only one error will appear a
 ## 3. Get existing forms list
 
 URL endpoint: https://servername/alt/route/formlist/appid/&lt;appId>/next/&lt;nextId&gt;/limit/&lt;limitDocs&gt;
- - where &lt;appId&gt; comes from tablet->organisation->app->id in request 1. 
- - where &lt;nextId&gt; is a doc ID
- - where &lt;limitDocs&gt; is a number, smaller numbers will return faster, but for most servers it won't make a difference
+_All of the following pairs are optional_
+ - where &lt;appId&gt; comes from tablet->organisation->app->id in request 1. All documents accessible by the user will be returned when this is not present. With it, only documents for the specified application will be returned.
+ - where &lt;nextId&gt; is a doc ID. Only documents with an ID greater than this will be returned
+ - where &lt;limitDocs&gt; is a number, smaller numbers will return faster, but for most servers it won't make a difference. Only this number of results will be returned, or less if fewer than this are found
  
-__All of the following pairs are optional__
-
-**appid** all documents accessible by the user will be returned when this is not present. With it, only documents for the specified application will be returned.
-
-**next** only documents with an ID greater than this will be returned
-
-**limit** only this number of results will be returned, or less if fewer than this are found
 
 ```xml
 <?xml version="1.0"?>
