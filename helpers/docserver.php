@@ -21,7 +21,7 @@ class DocServer
 		$appid	= null;
 		$appid	= intval($this->path['appid']);
 
-		if(!is_int($appid))
+		if($appid != $this->path['appid'])
 		{
 			$this->xml->addChild('error', 'ID value is not a number');
 			return;
@@ -52,6 +52,50 @@ class DocServer
 	
 	public function getDoc()
 	{
+		global $appsrv;
+		$appsrv	= true;
+		$doc	= null;
+		$docid	= intval($this->path['docid']);
+		
+		if(!isset($this->path['docid']))
+		{
+			$this->xml->addChild('error', 'ID not given');
+			return;
+		}
+		
+		if($docid != $this->path['docid'])
+		{
+			$this->xml->addChild('error', 'ID value is not a number');
+			return;
+		}
+		
+		try
+		{
+			$doc = Document::load(Document::BY_ID, $docid);
+		}
+		catch(Exception $e)
+		{
+			$this->xml->addChild('error', $e->getMessage());
+			return;
+		}
+		
+		if(is_null($doc))
+		{
+			$this->xml->addChild('error', 'A document with the ID ' . $docid . ' was not found or could not be loaded');
+			return;
+		}
+		
+		foreach($doc->pages as $pagenum => $page)
+		{
+			$p = $this->xml->addChild('page');
+			$p->addAttribute('number', ++$pagenum);
+			
+			foreach($page->fields as $field)
+			{
+				$f = $p->addChild('field', htmlspecialchars($field->value));
+				$f->addChild('name', $field->key);
+			}
+		}
 	}
 	
 	public function updateDoc()
