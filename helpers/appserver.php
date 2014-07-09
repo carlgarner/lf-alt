@@ -10,6 +10,7 @@ class Appserver
 	{
 		global $appsrv;
 		$appsrv = true;
+		$filter	= '';
 		$limit	= '';
 
 		if(isset($this->path['appid']))
@@ -18,7 +19,27 @@ class Appserver
 
 			if($app == $this->path['appid'])
 			{
-				$limit = 'AND Doc.app_id = ' . $app;
+				$filter .= 'AND Doc.app_id = "' . $app . '" ';
+			}
+		}
+		
+		if(isset($this->path['next']))
+		{
+			$next = intval($this->path['next']);
+			
+			if($next == $this->path['next'])
+			{
+				$filter .= 'AND Doc.id > "' . $next . '" ';
+			}
+		}
+		
+		if(isset($this->path['limit']))
+		{
+			$lim = intval($this->path['limit']);
+			
+			if($lim == $this->path['limit'])
+			{
+				$limit .= 'LIMIT ' . $lim;
 			}
 		}
 		
@@ -29,10 +50,11 @@ class Appserver
 					FROM Doc
 						LEFT JOIN Changeset ON Doc.id = Changeset.doc_id
 							WHERE submitter_email = "' . $this->user . '"
-								' . (($limit) ? $limit : '') . '
+								' . (($filter) ? $filter : '') . '
 								AND Doc.base_address = "0.0.0.1"
 									GROUP BY Doc.id
-									ORDER BY Changeset.created_date DESC';
+									ORDER BY Changeset.created_date DESC
+										' . $limit;
 		$db->query($query);
 
 		while($row = $db->fetchRow()) 

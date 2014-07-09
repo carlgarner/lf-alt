@@ -15,7 +15,7 @@ Things that the API needs to do
 3. Download of form template with background image - **COMPLETE**
   * Config XML and background PNG's (base 64 encoded files - PNG's are cached for speed)
 
-4. List of submissions by form
+4. List of submissions by form - **COMPLETE**
   * Ideally we can grab a paged list of 20-50 submissions at a time. 
   * Each item in list would contain: formIdentifier, Last Editor, Last Edit Date, Form State (Valid/Invalid, mandatory fields etc), form reference/key fields (if available)
 
@@ -97,9 +97,15 @@ This call could return one of the following errors. Only one error will appear a
 
 ## 3. Get existing forms list
 
-URL endpoint: https://servername/alt/route/formlist/appid/<appId> - where <appId> comes from tablet->organisation->app->id in request 1. 
-
-The "appid" pair in the URL is optional. Without it, all documents accessible by the user will be returned. With it, only documents for the specified application will be returned; useful for filtering.
+URL endpoint: https://servername/alt/route/formlist/appid/<appId>/next/<nextId>/limit/<limitDocs>
+ - where <appId> comes from tablet->organisation->app->id in request 1. 
+ - where <nextId> is a doc ID
+ - where <limitDocs> is a number, smaller numbers will return faster, but for most servers it won't make a difference
+ 
+__All of the following pairs are optional__
+**appid** all documents accessible by the user will be returned when this is not present. With it, only documents for the specified application will be returned.
+**next** only documents with an ID greater than this will be returned
+**limit** only this number of results will be returned, or less if fewer than this are found
 
 ```xml
 <?xml version="1.0"?>
