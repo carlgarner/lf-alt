@@ -93,7 +93,8 @@ class DocServer
 			foreach($page->fields as $field)
 			{
 				$f = $p->addChild('field', htmlspecialchars($field->value));
-				$f->addChild('name', $field->key);
+				$f->addAttribute('name', $field->key);
+				$f->addAttribute('type', $field->type);
 			}
 		}
 	}
