@@ -21,7 +21,7 @@ Things that the API needs to do
 
 5. Get form data by formIdentifier - **COMPLETE**
   * For integration into the form layout. 
-  * This is no longer going to take place. No stroke capable forms will be available to tablet devices. There are too many sync issues which could also introduce trust issues. We are also not building a "Viewer" for the tablet. ~~Retrieval of the strokes on a page by page basis, either by themselves or rendered onto the background would allow pen data display within the tablet editor.~~
+  * ~~Retrieval of the strokes on a page by page basis, either by themselves or rendered onto the background would allow pen data display within the tablet editor.~~ This is no longer going to take place. No stroke capable forms will be available to tablet devices. There are too many sync issues which could also introduce trust issues. We are also not building a "Viewer" for the tablet. 
 
 6. Update form data by formIdentifier.
   * To update text fields, radio/check boxes, ideally by sending a single xml document to the server. 
