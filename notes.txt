@@ -1,0 +1,18 @@
+To regenerate the PDF, you need NodeJS installed
+
+Though it's not mentioned you'll also need to do this:
+
+npm install -g phantomjs
+
+Before continuing
+
+git clone https://github.com/pawel-wiejacha/gfms.git
+cd gfms
+npm install
+cd your-github-project-dir
+gfms-dir/bin/gfms -p 1234
+
+
+Select your README.md file to view in the browser.
+
+Add ?pdf to the URL to make a PDF of it.
